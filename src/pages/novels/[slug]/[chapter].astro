@@ -153,30 +153,30 @@ nextTitle={nextTitle}
     margin-top: 10px;
   }
 
-  .chapter-content {
-    padding: 25px 10px;
-    color: var(--text);
-    font-size: 17px;
-    line-height: 1.9;
-    overflow-wrap: anywhere;
-  }
+.chapter-content {
+  padding: 25px;
+  color: var(--text);
+  font-size: 17px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+}
 
-  .chapter-content[data-theme="dark"] {
-    background: #151515;
-    color: #eeeeee;
-  }
+.chapter-content[data-theme="dark"] {
+  background: #151515;
+  color: #eeeeee;
+}
 
-  .chapter-content[data-theme="light"] {
-    background: #ffffff;
-    color: #222222;
-  }
+.chapter-content[data-theme="light"] {
+  background: #ffffff;
+  color: #222222;
+}
 
-  .chapter-content[data-theme="sepia"] {
-    background: #f1e5c9;
-    color: #5b4632;
-    padding: 25px;
-    border-radius: 6px;
-  }
+.chapter-content[data-theme="sepia"] {
+  background: #f1e5c9;
+  color: #5b4632;
+}
 
   .back-to-novel {
     text-align: center;
