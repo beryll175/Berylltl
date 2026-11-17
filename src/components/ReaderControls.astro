@@ -3,20 +3,27 @@
     <span>Font size</span>
     <button type="button" data-action="decrease" aria-label="Decrease font size">A−</button>
     <button type="button" data-action="increase" aria-label="Increase font size">A+</button>
-  </div>  <div class="control-group">
+  </div>
+
+  <div class="control-group">
     <span>Reading width</span>
     <button type="button" data-action="width" aria-label="Change reading width">↔</button>
-  </div>  <div class="control-group">
+  </div>
+
+  <div class="control-group">
     <span>Line spacing</span>
     <button type="button" data-action="spacing" aria-label="Change line spacing">↕</button>
-  </div>  <div class="control-group themes">
+  </div>
+
+  <div class="control-group themes">
     <span>Theme</span>
-    <button type="button" data-theme-choice="dark" aria-label="Dark theme" class="theme-dark">Dark</button>
-    <button type="button" data-theme-choice="light" aria-label="Light theme" class="theme-light">Light</button>
-    <button type="button" data-theme-choice="sepia" aria-label="Sepia theme" class="theme-sepia">Sepia</button>
+    <button type="button" data-theme-choice="dark" class="theme-dark">Dark</button>
+    <button type="button" data-theme-choice="light" class="theme-light">Light</button>
+    <button type="button" data-theme-choice="sepia" class="theme-sepia">Sepia</button>
   </div>
 </div>
-  <script>
+
+<script>
   document.querySelectorAll(".reader-controls").forEach((controls) => {
     if (controls.dataset.initialized) return;
     controls.dataset.initialized = "true";
@@ -54,6 +61,12 @@
       content.style.marginRight = "auto";
       content.dataset.theme = settings.theme;
 
+      controls.querySelectorAll("[data-theme-choice]").forEach((button) => {
+        const active = button.dataset.themeChoice === settings.theme;
+        button.classList.toggle("active-theme", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
+
       saveSettings();
     }
 
@@ -71,7 +84,6 @@
       settings.width =
         settings.width === 850 ? 650 :
         settings.width === 650 ? 1000 : 850;
-
       applySettings();
     });
 
@@ -79,7 +91,6 @@
       settings.spacing =
         settings.spacing === 1.9 ? 1.6 :
         settings.spacing === 1.6 ? 2.2 : 1.9;
-
       applySettings();
     });
 
@@ -92,7 +103,8 @@
 
     applySettings();
   });
-</scrip>
+</script>
+
 <style>
   .reader-controls {
     display: flex;
@@ -132,7 +144,12 @@
   .control-group button:hover,
   .control-group button:focus-visible {
     border-color: var(--accent);
-    color: var(--accent);
+  }
+
+  .control-group button.active-theme {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    font-weight: bold;
   }
 
   .theme-dark {
