@@ -4,10 +4,9 @@ const {
   chaptersPerPage = 50
 } = Astro.props;
 
-const tableId = `chapter-table-${Math.random().toString(36).slice(2, 9)}`;
 ---
 
-<div class="chapter-section" id={tableId}>
+<div class="chapter-section" id="chapter-list">
   <div class="section-heading">
     <div>
       <h2>Chapters</h2>
