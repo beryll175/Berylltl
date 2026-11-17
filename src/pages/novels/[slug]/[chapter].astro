@@ -33,14 +33,16 @@ return {
     chapter: String(entry.data.number)
   },
   props: {
-    novel,
-    entry,
-    previousHref: previous
-      ? `/novels/${novel.slug}/${previous.data.number}/`
-      : "",
-    nextHref: next
-      ? `/novels/${novel.slug}/${next.data.number}/`
-      : ""
+  novel,
+  entry,
+  previousHref: previous
+    ? `/novels/${novel.slug}/${previous.data.number}/`
+    : "",
+  previousTitle: previous ? previous.data.title : "",
+  nextHref: next
+    ? `/novels/${novel.slug}/${next.data.number}/`
+    : "",
+  nextTitle: next ? next.data.title : ""
   }
 };
 
