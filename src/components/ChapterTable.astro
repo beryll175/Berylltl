@@ -64,7 +64,7 @@ const tableId = "chapter-table-${Math.random().toString(36).slice(2, 9)}";
     const rows = Array.from(section.querySelectorAll(".chapter-row"));
     const previous = section.querySelector(".previous");
     const next = section.querySelector(".next");
-    const indicator = section.querySelector(".page-indicator");
+    const pageNumbers = section.querySelector(".page-numbers");
     const rangeStart = section.querySelector(".range-start");
     const rangeEnd = section.querySelector(".range-end");
 
@@ -80,12 +80,38 @@ const tableId = "chapter-table-${Math.random().toString(36).slice(2, 9)}";
         row.hidden = index < start || index >= end;
       });
 
-      if (rangeStart) rangeStart.textContent = rows.length ? String(start + 1) : "0";
-      if (rangeEnd) rangeEnd.textContent = String(end);
+      if (rangeStart) {
+        rangeStart.textContent = rows.length ? String(start + 1) : "0";
+      }
 
-      indicator.textContent = `Page ${currentPage} of ${totalPages}`;
+      if (rangeEnd) {
+        rangeEnd.textContent = String(end);
+      }
+
       previous.disabled = currentPage === 1;
       next.disabled = currentPage === totalPages;
+
+      pageNumbers.innerHTML = "";
+
+      for (let page = 1; page <= totalPages; page++) {
+        const button = document.createElement("button");
+
+        button.className = "page-button";
+        button.textContent = page;
+        button.type = "button";
+
+        if (page === currentPage) {
+          button.classList.add("active");
+          button.setAttribute("aria-current", "page");
+        }
+
+        button.addEventListener("click", () => {
+          currentPage = page;
+          renderPage();
+        });
+
+        pageNumbers.appendChild(button);
+      }
     }
 
     previous.addEventListener("click", () => {
