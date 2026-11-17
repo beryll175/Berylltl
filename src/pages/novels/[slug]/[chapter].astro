@@ -1,0 +1,175 @@
+---
+
+import MainLayout from "../../../layouts/MainLayout.astro";
+import ChapterNavigation from "../../../components/ChapterNavigation.astro";
+import { novels } from "../../../content/novels.js";
+
+export function getStaticPaths() {
+return novels.flatMap((novel) =>
+novel.chapters.map((chapter, index) => {
+const chapterSlug = chapter.slug || String(chapter.number || index + 1);
+
+  const previous = novel.chapters[index - 1];
+  const next = novel.chapters[index + 1];
+
+  const previousSlug = previous
+    ? previous.slug || String(previous.number || index)
+    : "";
+
+  const nextSlug = next
+    ? next.slug || String(next.number || index + 2)
+    : "";
+
+  return {
+    params: {
+      slug: novel.slug,
+      chapter: chapterSlug
+    },
+    props: {
+      novel,
+      chapter,
+      previousHref: previous
+        ? `/novels/${novel.slug}/${previousSlug}/`
+        : "",
+      nextHref: next
+        ? `/novels/${novel.slug}/${nextSlug}/`
+        : ""
+    }
+  };
+})
+
+);
+}
+
+const {
+novel,
+chapter,
+previousHref,
+nextHref
+} = Astro.props;
+
+const chapterListHref = "/novels/${novel.slug}/#chapter-list";
+---
+<MainLayout
+title={"${chapter.title || "Chapter ${chapter.number}"} | ${novel.title}"}
+description={"Read ${chapter.title || "Chapter ${chapter.number}"} of ${novel.title}."}
+
+«»
+
+  <article class="reader"><div class="breadcrumb">
+  <a href="/">Home</a>
+  <span>›</span>
+  <a href={`/novels/${novel.slug}/`}>{novel.title}</a>
+  <span>›</span>
+  <span>Chapter {chapter.number}</span>
+</div>
+
+<header class="reader-heading">
+  <h1>{novel.title}</h1>
+  <p class="chapter-title">
+    {chapter.title || `Chapter ${chapter.number}`}
+  </p>
+  <p class="chapter-info">
+    Chapter {chapter.number}
+    {chapter.updated && ` · ${chapter.updated}`}
+  </p>
+</header>
+
+<ChapterNavigation
+  previousHref={previousHref}
+  nextHref={nextHref}
+  chapterListHref={chapterListHref}
+/>
+
+<div class="chapter-content">
+  {chapter.content || "This chapter has not been published yet."}
+</div>
+
+<ChapterNavigation
+  previousHref={previousHref}
+  nextHref={nextHref}
+  chapterListHref={chapterListHref}
+/>
+
+<div class="back-to-novel">
+  <a href={`/novels/${novel.slug}/`}>← Back to {novel.title}</a>
+</div>
+
+  </article>
+</MainLayout><style>
+  .reader {
+    max-width: 850px;
+    margin: 0 auto;
+  }
+
+  .breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 25px;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--accent);
+  }
+
+  .reader-heading {
+    text-align: center;
+    padding: 25px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .reader-heading h1 {
+    font-size: 25px;
+    line-height: 1.4;
+  }
+
+  .chapter-title {
+    font-size: 19px;
+    color: var(--accent);
+    margin-top: 12px;
+  }
+
+  .chapter-info {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 10px;
+  }
+
+  .chapter-content {
+    padding: 25px 10px;
+    color: var(--text);
+    font-size: 17px;
+    line-height: 1.9;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .back-to-novel {
+    text-align: center;
+    margin: 25px 0;
+    font-size: 13px;
+  }
+
+  .back-to-novel a {
+    color: var(--accent);
+  }
+
+  @media (max-width: 600px) {
+    .reader-heading h1 {
+      font-size: 21px;
+    }
+
+    .chapter-title {
+      font-size: 17px;
+    }
+
+    .chapter-content {
+      padding: 20px 5px;
+      font-size: 16px;
+      line-height: 1.85;
+    }
+  }
+ </style>
