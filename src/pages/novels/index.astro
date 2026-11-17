@@ -1,0 +1,116 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import NovelCard from "../../components/NovelCard.astro";
+import { novels } from "../../content/novels.js";
+import { getCollection } from "astro:content";
+
+const chapterEntries = await getCollection("chapters");
+
+const libraryNovels = novels.map((novel) => ({
+  ...novel,
+  totalChapters: chapterEntries.filter(
+    (chapter) => chapter.data.novel === novel.slug
+  ).length
+}));
+---
+
+<MainLayout
+  title="Novel Library | Beryll TL"
+  description="Browse Chinese novels translated into English by Beryll TL."
+>
+  <section class="library-page">
+    <div class="page-heading">
+      <span class="section-label">EXPLORE OUR COLLECTION</span>
+      <h1>Novel Library</h1>
+      <p>
+        Find your next favourite story among our translated Chinese novels.
+      </p>
+    </div>
+
+    <div class="library-info">
+      <h2>All Novels</h2>
+      <span>{libraryNovels.length} Novels</span>
+    </div>
+
+    {libraryNovels.length > 0 ? (
+      <div class="novel-list">
+        {libraryNovels.map((novel) => (
+          <NovelCard
+            {...novel}
+            href={`/novels/${novel.slug}/`}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="empty-library">
+        <h3>No novels available yet.</h3>
+        <p>Check back soon for new translations!</p>
+      </div>
+    )}
+  </section>
+</MainLayout>
+
+<style>
+  .page-heading {
+    padding: 35px 0;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-label {
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 2px;
+  }
+
+  .page-heading h1 {
+    font-size: 35px;
+    margin: 10px 0;
+  }
+
+  .page-heading p {
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .library-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .library-info h2 {
+    font-size: 22px;
+  }
+
+  .library-info span {
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .novel-list {
+    display: grid;
+    gap: 18px;
+  }
+
+  .empty-library {
+    padding: 45px 20px;
+    text-align: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .empty-library p {
+    color: var(--muted);
+    margin-top: 10px;
+  }
+
+  @media (max-width: 600px) {
+    .page-heading h1 {
+      font-size: 28px;
+    }
+  }
+</style>
