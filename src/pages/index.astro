@@ -3,10 +3,18 @@
 import MainLayout from "../layouts/MainLayout.astro";
 import NovelCard from "../components/NovelCard.astro";
 import { novels } from "../content/novels.js";
+import { getCollection } from "astro:content";
 
-const availableNovels = novels.filter(
-(novel) => novel.status !== "Coming Soon"
-);
+const chapterEntries = await getCollection("chapters");
+
+const availableNovels = novels
+  .filter((novel) => novel.status !== "Coming Soon")
+  .map((novel) => ({
+    ...novel,
+    totalChapters: chapterEntries.filter(
+      (chapter) => chapter.data.novel === novel.slug
+    ).length
+  }));
 ---
 <MainLayout
 title="Beryll TL | Chinese Novel Translations"
