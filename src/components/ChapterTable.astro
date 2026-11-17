@@ -43,11 +43,13 @@ const tableId = "chapter-table-${Math.random().toString(36).slice(2, 9)}";
     </table>
   </div>
 
-  <div class="pagination">
-    <button class="page-button previous" disabled>← Previous</button>
-    <span class="page-indicator">Page 1 of {Math.ceil(chapters.length / chaptersPerPage)}</span>
-    <button class="page-button next">Next →</button>
-  </div>
+  <<div class="pagination">
+  <button class="page-button previous" disabled>← Previous</button>
+
+  <div class="page-numbers"></div>
+
+  <button class="page-button next">Next →</button>
+</div>
 </>
 
 ) : (
