@@ -1,0 +1,150 @@
+---
+
+const {
+previousHref = "",
+previousTitle = "Previous Chapter",
+nextHref = "",
+nextTitle = "Next Chapter",
+chapterListHref = "#"
+} = Astro.props;
+
+---
+
+<nav class="chapter-navigation" aria-label="Chapter navigation">{previousHref ? (
+<a href={previousHref} class="nav-button previous">
+<span class="arrow">←</span>
+<span class="button-text">
+<small>Previous</small>
+<strong>{previousTitle}</strong>
+</span>
+</a>
+) : (
+<span class="nav-button disabled">
+<span class="arrow">←</span>
+<span class="button-text">
+<small>Previous</small>
+<strong>No previous chapter</strong>
+</span>
+</span>
+)}
+
+  <a href={chapterListHref} class="chapter-list-button">
+    ☰ Chapter List
+  </a>{nextHref ? (
+<a href={nextHref} class="nav-button next">
+<span class="button-text">
+<small>Next</small>
+<strong>{nextTitle}</strong>
+</span>
+<span class="arrow">→</span>
+</a>
+) : (
+<span class="nav-button disabled">
+<span class="button-text">
+<small>Next</small>
+<strong>No next chapter</strong>
+</span>
+<span class="arrow">→</span>
+</span>
+)}
+
+</nav><style>
+  .chapter-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 12px;
+    margin: 22px 0;
+  }
+
+  .nav-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+    padding: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+  }
+
+  .nav-button.next {
+    justify-content: flex-end;
+    text-align: right;
+  }
+
+  .nav-button:hover:not(.disabled) {
+    border-color: var(--accent);
+  }
+
+  .button-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 4px;
+  }
+
+  .button-text small {
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .button-text strong {
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .arrow {
+    color: var(--accent);
+    font-size: 18px;
+  }
+
+  .disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .chapter-list-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    background: var(--accent);
+    color: #151515;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+
+  .chapter-list-button:hover {
+    background: #ffb45e;
+  }
+
+  @media (max-width: 480px) {
+    .chapter-navigation {
+      gap: 6px;
+    }
+
+    .nav-button {
+      padding: 9px 7px;
+      gap: 5px;
+    }
+
+    .button-text strong {
+      font-size: 10px;
+    }
+
+    .chapter-list-button {
+      padding: 8px;
+      font-size: 10px;
+    }
+
+    .arrow {
+      font-size: 15px;
+    }
+  }
+ </style>
