@@ -130,7 +130,8 @@ const tableId = "chapter-table-${Math.random().toString(36).slice(2, 9)}";
 
     renderPage();
   });
-</script><style>
+</script>;
+    <style>
   .chapter-section {
     margin: 35px 0;
   }
@@ -201,17 +202,34 @@ const tableId = "chapter-table-${Math.random().toString(36).slice(2, 9)}";
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 18px;
+    flex-wrap: wrap;
+    gap: 8px;
     margin-top: 20px;
+  }
+
+  .page-numbers {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
   }
 
   .page-button {
     background: var(--surface);
     color: var(--text);
     border: 1px solid var(--border);
-    padding: 9px 15px;
+    padding: 9px 13px;
     border-radius: 4px;
     font-size: 12px;
+    cursor: pointer;
+  }
+
+  .page-button.active {
+    background: var(--accent);
+    color: #151515;
+    border-color: var(--accent);
+    font-weight: bold;
   }
 
   .page-button:disabled {
@@ -219,14 +237,9 @@ const tableId = "chapter-table-${Math.random().toString(36).slice(2, 9)}";
     cursor: not-allowed;
   }
 
-  .page-button:not(:disabled):hover {
+  .page-button:not(:disabled):not(.active):hover {
     border-color: var(--accent);
     color: var(--accent);
-  }
-
-  .page-indicator {
-    color: var(--muted);
-    font-size: 12px;
   }
 
   .empty-state {
@@ -248,11 +261,11 @@ const tableId = "chapter-table-${Math.random().toString(36).slice(2, 9)}";
     }
 
     .pagination {
-      gap: 10px;
+      gap: 5px;
     }
 
     .page-button {
       padding: 8px 10px;
     }
   }
-           </style>
+    </style>
