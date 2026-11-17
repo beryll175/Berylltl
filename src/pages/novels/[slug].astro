@@ -2,20 +2,32 @@
 import MainLayout from "../../layouts/MainLayout.astro";
 import ChapterTable from "../../components/ChapterTable.astro";
 import { novels } from "../../content/novels.js";
+import { getCollection } from "astro:content";
 
-export function getStaticPaths() {
-  return novels.map((novel) => ({
-    params: { slug: novel.slug },
-    props: { novel }
-  }));
+export async function getStaticPaths() {
+  const entries = await getCollection("chapters");
+
+  return novels.map((novel) => {
+    const chapters = entries
+      .filter((entry) => entry.data.novel === novel.slug)
+      .sort((a, b) => a.data.number - b.data.number)
+      .map((entry) => ({
+        number: entry.data.number,
+        title: entry.data.title,
+        volume: entry.data.volume || "",
+        updated: entry.data.updated || "",
+        href: `/novels/${novel.slug}/${entry.data.number}/`
+      }));
+
+    return {
+      params: { slug: novel.slug },
+      props: { novel, chapters }
+    };
+  });
 }
 
-const { novel } = Astro.props;
-
-const chapters = novel.chapters.map((chapter, index) => ({
-  ...chapter,
-  href: `/novels/${novel.slug}/${chapter.slug || chapter.number || index + 1}/`
-}));
+const { novel, chapters } = Astro.props;
+const totalChapters = chapters.length;
 ---
 
 <MainLayout
@@ -52,7 +64,7 @@ description={novel.synopsis}
     <p class="author">By {novel.author}</p>
 
     <div class="metadata">
-      <span>📖 {novel.totalChapters} Chapters</span>
+      <span>📖 {totalChapters} Chapters</span>
       <span>🌐 Chinese → English</span>
     </div>
 
