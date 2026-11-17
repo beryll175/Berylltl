@@ -1,58 +1,60 @@
 ---
 
+import { getCollection, render } from "astro:content";
 import MainLayout from "../../../layouts/MainLayout.astro";
 import ChapterNavigation from "../../../components/ChapterNavigation.astro";
+import ReaderControls from "../../../components/ReaderControls.astro";
 import { novels } from "../../../content/novels.js";
 
-export function getStaticPaths() {
-return novels.flatMap((novel) =>
-novel.chapters.map((chapter, index) => {
-const chapterSlug = chapter.slug || String(chapter.number || index + 1);
+export async function getStaticPaths() {
+const entries = await getCollection("chapters");
 
-  const previous = novel.chapters[index - 1];
-  const next = novel.chapters[index + 1];
-
-  const previousSlug = previous
-    ? previous.slug || String(previous.number || index)
-    : "";
-
-  const nextSlug = next
-    ? next.slug || String(next.number || index + 2)
-    : "";
-
-  return {
-    params: {
-      slug: novel.slug,
-      chapter: chapterSlug
-    },
-    props: {
-      novel,
-      chapter,
-      previousHref: previous
-        ? `/novels/${novel.slug}/${previousSlug}/`
-        : "",
-      nextHref: next
-        ? `/novels/${novel.slug}/${nextSlug}/`
-        : ""
-    }
-  };
-})
-
+return entries.map((entry) => {
+const novel = novels.find(
+(item) => item.slug === entry.data.novel
 );
+
+if (!novel) return null;
+
+const novelChapters = entries
+  .filter((item) => item.data.novel === novel.slug)
+  .sort((a, b) => a.data.number - b.data.number);
+
+const index = novelChapters.findIndex(
+  (item) => item.id === entry.id
+);
+
+const previous = novelChapters[index - 1];
+const next = novelChapters[index + 1];
+
+return {
+  params: {
+    slug: novel.slug,
+    chapter: String(entry.data.number)
+  },
+  props: {
+    novel,
+    entry,
+    previousHref: previous
+      ? `/novels/${novel.slug}/${previous.data.number}/`
+      : "",
+    nextHref: next
+      ? `/novels/${novel.slug}/${next.data.number}/`
+      : ""
+  }
+};
+
+}).filter(Boolean);
 }
 
-const {
-novel,
-chapter,
-previousHref,
-nextHref
-} = Astro.props;
+const { novel, entry, previousHref, nextHref } = Astro.props;
+const { Content } = await render(entry);
 
 const chapterListHref = "/novels/${novel.slug}/#chapter-list";
 ---
 <MainLayout
-title={"${chapter.title || "Chapter ${chapter.number}"} | ${novel.title}"}
-description={"Read ${chapter.title || "Chapter ${chapter.number}"} of ${novel.title}."}
+title={"${entry.data.title} | ${novel.title}"}
+description={"Read ${entry.data.title} of ${novel.title}."}
 
 «»
 
@@ -61,17 +63,15 @@ description={"Read ${chapter.title || "Chapter ${chapter.number}"} of ${novel.ti
   <span>›</span>
   <a href={`/novels/${novel.slug}/`}>{novel.title}</a>
   <span>›</span>
-  <span>Chapter {chapter.number}</span>
+  <span>Chapter {entry.data.number}</span>
 </div>
 
 <header class="reader-heading">
   <h1>{novel.title}</h1>
-  <p class="chapter-title">
-    {chapter.title || `Chapter ${chapter.number}`}
-  </p>
+  <p class="chapter-title">{entry.data.title}</p>
   <p class="chapter-info">
-    Chapter {chapter.number}
-    {chapter.updated && ` · ${chapter.updated}`}
+    Chapter {entry.data.number}
+    {entry.data.updated && ` · ${entry.data.updated}`}
   </p>
 </header>
 
@@ -81,8 +81,10 @@ description={"Read ${chapter.title || "Chapter ${chapter.number}"} of ${novel.ti
   chapterListHref={chapterListHref}
 />
 
+<ReaderControls />
+
 <div class="chapter-content">
-  {chapter.content || "This chapter has not been published yet."}
+  <Content />
 </div>
 
 <ChapterNavigation
@@ -143,8 +145,24 @@ description={"Read ${chapter.title || "Chapter ${chapter.number}"} of ${novel.ti
     color: var(--text);
     font-size: 17px;
     line-height: 1.9;
-    white-space: pre-wrap;
     overflow-wrap: anywhere;
+  }
+
+  .chapter-content[data-theme="dark"] {
+    background: #151515;
+    color: #eeeeee;
+  }
+
+  .chapter-content[data-theme="light"] {
+    background: #ffffff;
+    color: #222222;
+  }
+
+  .chapter-content[data-theme="sepia"] {
+    background: #f1e5c9;
+    color: #5b4632;
+    padding: 25px;
+    border-radius: 6px;
   }
 
   .back-to-novel {
