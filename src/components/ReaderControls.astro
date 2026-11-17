@@ -15,56 +15,85 @@
     <button type="button" data-theme-choice="light" aria-label="Light theme" class="theme-light">Light</button>
     <button type="button" data-theme-choice="sepia" aria-label="Sepia theme" class="theme-sepia">Sepia</button>
   </div>
-</div><script>
+</div>
+  <script>
   document.querySelectorAll(".reader-controls").forEach((controls) => {
     if (controls.dataset.initialized) return;
     controls.dataset.initialized = "true";
 
     const content = controls.parentElement.querySelector(".chapter-content");
-
     if (!content) return;
 
-    let fontSize = 17;
-    let width = 850;
-    let spacing = 1.9;
+    const storageKey = "beryll-reader-settings";
+
+    const defaults = {
+      fontSize: 17,
+      width: 850,
+      spacing: 1.9,
+      theme: "dark"
+    };
+
+    let settings = { ...defaults };
+
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey));
+      if (saved) settings = { ...defaults, ...saved };
+    } catch {
+      settings = { ...defaults };
+    }
+
+    function saveSettings() {
+      localStorage.setItem(storageKey, JSON.stringify(settings));
+    }
 
     function applySettings() {
-      content.style.fontSize = `${fontSize}px`;
-      content.style.maxWidth = `${width}px`;
-      content.style.lineHeight = spacing;
+      content.style.fontSize = `${settings.fontSize}px`;
+      content.style.maxWidth = `${settings.width}px`;
+      content.style.lineHeight = settings.spacing;
       content.style.marginLeft = "auto";
       content.style.marginRight = "auto";
+      content.dataset.theme = settings.theme;
+
+      saveSettings();
     }
 
     controls.querySelector('[data-action="increase"]').addEventListener("click", () => {
-      fontSize = Math.min(fontSize + 1, 25);
+      settings.fontSize = Math.min(settings.fontSize + 1, 25);
       applySettings();
     });
 
     controls.querySelector('[data-action="decrease"]').addEventListener("click", () => {
-      fontSize = Math.max(fontSize - 1, 12);
+      settings.fontSize = Math.max(settings.fontSize - 1, 12);
       applySettings();
     });
 
     controls.querySelector('[data-action="width"]').addEventListener("click", () => {
-      width = width === 850 ? 650 : width === 650 ? 1000 : 850;
+      settings.width =
+        settings.width === 850 ? 650 :
+        settings.width === 650 ? 1000 : 850;
+
       applySettings();
     });
 
     controls.querySelector('[data-action="spacing"]').addEventListener("click", () => {
-      spacing = spacing === 1.9 ? 1.6 : spacing === 1.6 ? 2.2 : 1.9;
+      settings.spacing =
+        settings.spacing === 1.9 ? 1.6 :
+        settings.spacing === 1.6 ? 2.2 : 1.9;
+
       applySettings();
     });
 
     controls.querySelectorAll("[data-theme-choice]").forEach((button) => {
       button.addEventListener("click", () => {
-        content.dataset.theme = button.dataset.themeChoice;
+        settings.theme = button.dataset.themeChoice;
+        applySettings();
       });
     });
 
     applySettings();
   });
-</script><style>
+</scrip>
+<style>
   .reader-controls {
     display: flex;
     flex-wrap: wrap;
