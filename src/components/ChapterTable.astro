@@ -1,62 +1,66 @@
 ---
-
 const {
-chapters = [],
-chaptersPerPage = 50
+  chapters = [],
+  chaptersPerPage = 50
 } = Astro.props;
 
-const tableId = "chapter-table-${Math.random().toString(36).slice(2, 9)}";
+const tableId = `chapter-table-${Math.random().toString(36).slice(2, 9)}`;
 ---
+
 <div class="chapter-section" id={tableId}>
   <div class="section-heading">
     <div>
       <h2>Chapters</h2>
-      <p class="chapter-count">Showing chapters <span class="range-start">1</span>–<span class="range-end">{Math.min(chapters.length, chaptersPerPage)}</span> of {chapters.length}</p>
+      <p class="chapter-count">
+        Showing chapters
+        <span class="range-start">1</span>–<span class="range-end">{Math.min(chapters.length, chaptersPerPage)}</span>
+        of {chapters.length}
+      </p>
     </div>
-  </div>{chapters.length > 0 ? (
-<>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr>
-<th>Chapter</th>
-<th>Title</th>
-<th>Volume</th>
-<th>Updated</th>
-</tr>
-</thead>
-
-      <tbody>
-        {chapters.map((chapter, index) => (
-          <tr class="chapter-row" data-index={index}>
-            <td class="chapter-number">{chapter.number ?? index + 1}</td>
-            <td>
-              <a href={chapter.href} class="chapter-link">
-                {chapter.title || `Chapter ${chapter.number ?? index + 1}`}
-              </a>
-            </td>
-            <td class="volume">{chapter.volume || "—"}</td>
-            <td class="updated">{chapter.updated || "—"}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
   </div>
 
-  <<div class="pagination">
-  <button class="page-button previous" disabled>← Previous</button>
+  {chapters.length > 0 ? (
+    <>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Chapter</th>
+              <th>Title</th>
+              <th>Volume</th>
+              <th>Updated</th>
+            </tr>
+          </thead>
 
-  <div class="page-numbers"></div>
+          <tbody>
+            {chapters.map((chapter, index) => (
+              <tr class="chapter-row" data-index={index}>
+                <td class="chapter-number">{chapter.number ?? index + 1}</td>
+                <td>
+                  <a href={chapter.href} class="chapter-link">
+                    {chapter.title || `Chapter ${chapter.number ?? index + 1}`}
+                  </a>
+                </td>
+                <td class="volume">{chapter.volume || "—"}</td>
+                <td class="updated">{chapter.updated || "—"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-  <button class="page-button next">Next →</button>
+      <div class="pagination">
+        <button class="page-button previous" disabled>← Previous</button>
+        <div class="page-numbers"></div>
+        <button class="page-button next">Next →</button>
+      </div>
+    </>
+  ) : (
+    <p class="empty-state">Chapters will be added soon.</p>
+  )}
 </div>
-</>
 
-) : (
-<p class="empty-state">Chapters will be added soon.</p>
-)}
-
-</div><script>
+<script>
   document.querySelectorAll(".chapter-section").forEach((section) => {
     if (section.dataset.initialized) return;
     section.dataset.initialized = "true";
@@ -130,8 +134,9 @@ const tableId = "chapter-table-${Math.random().toString(36).slice(2, 9)}";
 
     renderPage();
   });
-</script>;
-    <style>
+</script>
+
+<style>
   .chapter-section {
     margin: 35px 0;
   }
@@ -268,4 +273,4 @@ const tableId = "chapter-table-${Math.random().toString(36).slice(2, 9)}";
       padding: 8px 10px;
     }
   }
-    </style>
+  </style>
