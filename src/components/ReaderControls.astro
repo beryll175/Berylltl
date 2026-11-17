@@ -1,0 +1,134 @@
+<div class="reader-controls">
+  <div class="control-group">
+    <span>Font size</span>
+    <button type="button" data-action="decrease" aria-label="Decrease font size">A−</button>
+    <button type="button" data-action="increase" aria-label="Increase font size">A+</button>
+  </div>  <div class="control-group">
+    <span>Reading width</span>
+    <button type="button" data-action="width" aria-label="Change reading width">↔</button>
+  </div>  <div class="control-group">
+    <span>Line spacing</span>
+    <button type="button" data-action="spacing" aria-label="Change line spacing">↕</button>
+  </div>  <div class="control-group themes">
+    <span>Theme</span>
+    <button type="button" data-theme-choice="dark" aria-label="Dark theme" class="theme-dark">Dark</button>
+    <button type="button" data-theme-choice="light" aria-label="Light theme" class="theme-light">Light</button>
+    <button type="button" data-theme-choice="sepia" aria-label="Sepia theme" class="theme-sepia">Sepia</button>
+  </div>
+</div><script>
+  document.querySelectorAll(".reader-controls").forEach((controls) => {
+    if (controls.dataset.initialized) return;
+    controls.dataset.initialized = "true";
+
+    const content = controls.parentElement.querySelector(".chapter-content");
+
+    if (!content) return;
+
+    let fontSize = 17;
+    let width = 850;
+    let spacing = 1.9;
+
+    function applySettings() {
+      content.style.fontSize = `${fontSize}px`;
+      content.style.maxWidth = `${width}px`;
+      content.style.lineHeight = spacing;
+      content.style.marginLeft = "auto";
+      content.style.marginRight = "auto";
+    }
+
+    controls.querySelector('[data-action="increase"]').addEventListener("click", () => {
+      fontSize = Math.min(fontSize + 1, 25);
+      applySettings();
+    });
+
+    controls.querySelector('[data-action="decrease"]').addEventListener("click", () => {
+      fontSize = Math.max(fontSize - 1, 12);
+      applySettings();
+    });
+
+    controls.querySelector('[data-action="width"]').addEventListener("click", () => {
+      width = width === 850 ? 650 : width === 650 ? 1000 : 850;
+      applySettings();
+    });
+
+    controls.querySelector('[data-action="spacing"]').addEventListener("click", () => {
+      spacing = spacing === 1.9 ? 1.6 : spacing === 1.6 ? 2.2 : 1.9;
+      applySettings();
+    });
+
+    controls.querySelectorAll("[data-theme-choice]").forEach((button) => {
+      button.addEventListener("click", () => {
+        content.dataset.theme = button.dataset.themeChoice;
+      });
+    });
+
+    applySettings();
+  });
+</script><style>
+  .reader-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px 20px;
+    padding: 15px;
+    margin: 20px 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+
+  .control-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .control-group > span {
+    color: var(--muted);
+    font-size: 11px;
+    margin-right: 3px;
+  }
+
+  .control-group button {
+    padding: 6px 9px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--background);
+    color: var(--text);
+    font-size: 11px;
+    cursor: pointer;
+  }
+
+  .control-group button:hover,
+  .control-group button:focus-visible {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .theme-dark {
+    background: #151515 !important;
+    color: #eeeeee !important;
+  }
+
+  .theme-light {
+    background: #f5f5f5 !important;
+    color: #222222 !important;
+  }
+
+  .theme-sepia {
+    background: #f1e5c9 !important;
+    color: #5b4632 !important;
+  }
+
+  @media (max-width: 600px) {
+    .reader-controls {
+      gap: 12px;
+      justify-content: flex-start;
+    }
+
+    .control-group {
+      flex-wrap: wrap;
+    }
+  }
+</style>
