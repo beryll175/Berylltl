@@ -1,199 +1,190 @@
 ---
 
-const novels = [
-{
-title: "Coming Soon",
-author: "Translation in progress",
-description: "Our first translated novel will be arriving soon.",
-status: "Coming Soon"
-}
-];
+import MainLayout from "../layouts/MainLayout.astro";
+import NovelCard from "../components/NovelCard.astro";
+import { novels } from "../content/novels.js";
 
+const availableNovels = novels.filter(
+(novel) => novel.status !== "Coming Soon"
+);
 ---
+<MainLayout
+title="Beryll TL | Chinese Novel Translations"
+description="Read Chinese novels translated into English by Beryll TL."
 
-<!DOCTYPE html><html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#151515" />
-  <title>Beryl TL | Chinese Novel Translations</title>
-  <meta name="description" content="Discover Chinese novels translated into English by Beryll TL." />  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+«»
 
-    body {
-      background: #151515;
-      color: #eee;
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-    }
+  <section class="hero">
+    <span class="hero-label">CHINESE NOVEL TRANSLATIONS</span><h1>Stories worth<br /><span>staying up for.</span></h1>
 
-    header {
-      padding: 22px 7%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #303030;
-    }
+<p>
+  Discover translated Chinese novels, one chapter at a time.
+  Your next favourite story starts here.
+</p>
 
-    .logo {
-      font-size: 25px;
-      font-weight: bold;
-      color: #f39a35;
-      letter-spacing: 1px;
-    }
+<a href="#novels" class="hero-button">Explore Novels ↓</a>
 
-    nav a {
-      color: #ddd;
-      text-decoration: none;
-      margin-left: 20px;
-      font-size: 14px;
-    }
+  </section>  <section class="novels-section" id="novels">
+    <div class="section-heading">
+      <div>
+        <span class="section-label">OUR LIBRARY</span>
+        <h2>Currently Translating</h2>
+      </div>  <span class="novel-count">{availableNovels.length} Novels</span>
+</div>
 
-    nav a:hover {
-      color: #f39a35;
-    }
+{availableNovels.length > 0 ? (
+  <div class="novel-list">
+    {availableNovels.map((novel) => (
+      <NovelCard
+        {...novel}
+        href={`/novels/${novel.slug}/`}
+      />
+    ))}
+  </div>
+) : (
+  <div class="empty-library">
+    <h3>Something is brewing...</h3>
+    <p>
+      We're preparing our first translations.
+      Check back soon for new stories!
+    </p>
+  </div>
+)}
 
+  </section>  <section class="about-section">
+    <h2>About Beryll TL</h2>
+    <p>
+      Beryll TL brings Chinese web novels to English-speaking readers.
+      Explore new stories and enjoy free translations, one chapter at a time.
+    </p>
+  </section>
+</MainLayout><style>
+  .hero {
+    padding: 85px 25px;
+    text-align: center;
+    background: linear-gradient(145deg, #292016, #191919 65%);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 55px;
+  }
+
+  .hero-label,
+  .section-label {
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 2px;
+  }
+
+  .hero h1 {
+    font-size: clamp(38px, 7vw, 65px);
+    line-height: 1.15;
+    margin: 20px 0;
+  }
+
+  .hero h1 span {
+    color: var(--accent);
+  }
+
+  .hero p {
+    max-width: 480px;
+    margin: 0 auto;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  .hero-button {
+    display: inline-block;
+    margin-top: 28px;
+    padding: 12px 22px;
+    background: var(--accent);
+    color: #151515;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: bold;
+  }
+
+  .hero-button:hover {
+    background: #ffb45e;
+  }
+
+  .novels-section {
+    margin-bottom: 55px;
+    scroll-margin-top: 25px;
+  }
+
+  .section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+  }
+
+  .section-heading h2 {
+    font-size: 25px;
+    margin-top: 7px;
+  }
+
+  .novel-count {
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .novel-list {
+    display: grid;
+    gap: 18px;
+  }
+
+  .empty-library {
+    padding: 45px 20px;
+    text-align: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .empty-library h3 {
+    font-size: 19px;
+    margin-bottom: 10px;
+  }
+
+  .empty-library p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .about-section {
+    padding: 30px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 35px;
+  }
+
+  .about-section h2 {
+    font-size: 21px;
+    margin-bottom: 12px;
+  }
+
+  .about-section p {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  @media (max-width: 600px) {
     .hero {
-      padding: 100px 7%;
-      background: linear-gradient(110deg, #222, #151515);
+      padding: 65px 18px;
     }
 
-    .hero h1 {
-      font-size: clamp(36px, 6vw, 65px);
-      max-width: 700px;
-      line-height: 1.15;
-      margin-bottom: 20px;
+    .section-heading h2 {
+      font-size: 20px;
     }
 
-    .hero h1 span {
-      color: #f39a35;
+    .about-section {
+      padding: 22px;
     }
-
-    .hero p {
-      color: #aaa;
-      max-width: 520px;
-      margin-bottom: 30px;
-    }
-
-    .button {
-      display: inline-block;
-      padding: 12px 25px;
-      background: #f39a35;
-      color: #151515;
-      text-decoration: none;
-      font-weight: bold;
-      border-radius: 4px;
-    }
-
-    .section {
-      padding: 65px 7%;
-    }
-
-    .section h2 {
-      font-size: 27px;
-      margin-bottom: 25px;
-    }
-
-    .novel-card {
-      background: #222;
-      padding: 25px;
-      border: 1px solid #333;
-      border-radius: 6px;
-      max-width: 350px;
-    }
-
-    .novel-card h3 {
-      color: #f39a35;
-      margin-bottom: 8px;
-    }
-
-    .novel-card p {
-      color: #aaa;
-      font-size: 14px;
-      margin-bottom: 15px;
-    }
-
-    .patreon {
-      background: #222;
-      padding: 55px 7%;
-      text-align: center;
-    }
-
-    .patreon h2 {
-      margin-bottom: 12px;
-    }
-
-    .patreon p {
-      color: #aaa;
-      margin-bottom: 22px;
-    }
-
-    footer {
-      padding: 25px 7%;
-      text-align: center;
-      color: #777;
-      font-size: 13px;
-    }
-
-    @media (max-width: 600px) {
-      header {
-        padding: 18px 5%;
-      }
-
-      nav a {
-        margin-left: 10px;
-        font-size: 12px;
-      }
-
-      .hero {
-        padding: 75px 6%;
-      }
-
-      .section {
-        padding: 45px 6%;
-      }
-    }
-  </style></head><body>
-  <header>
-    <div class="logo">BERYLL TL</div>
-    <nav>
-      <a href="/">Home</a>
-      <a href="#novels">Novels</a>
-      <a href="#patreon">Patreon</a>
-    </nav>
-  </header>  <main>
-    <section class="hero">
-      <h1>Stories worth <span>staying up for.</span></h1>
-      <p>
-        Discover captivating Chinese novels, thoughtfully translated
-        into English. Find your next favourite story with Beryll TL.
-      </p>
-      <a href="#novels" class="button">Explore Novels</a>
-    </section><section class="section" id="novels">
-  <h2>Our Novels</h2>
-
-  {novels.map((novel) => (
-    <article class="novel-card">
-      <h3>{novel.title}</h3>
-      <p>{novel.author}</p>
-      <p>{novel.description}</p>
-      <small>{novel.status}</small>
-    </article>
-  ))}
-</section>
-
-<section class="patreon" id="patreon">
-  <h2>Support Our Translations</h2>
-  <p>Enjoying our stories? Join us on Patreon for advanced chapters and exclusive content.</p>
-  <a href="#" class="button">Visit Our Patreon</a>
-</section>
-
-  </main>  <footer>
-    © 2026 Beryll TL. All rights reserved.
-  </footer>
-</body>
-</html>
+  }
+  </style>
