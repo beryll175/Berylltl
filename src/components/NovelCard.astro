@@ -1,0 +1,243 @@
+---
+
+const {
+title,
+rawTitle = "",
+author = "Unknown Author",
+cover = "",
+synopsis = "",
+status = "Ongoing",
+genres = [],
+totalChapters = 0,
+novelUpdates = "",
+href = "#",
+continueHref = ""
+} = Astro.props;
+
+const readingHref = continueHref || href;
+const readingLabel = continueHref ? "Continue Reading →" : "Read Now →";
+
+---
+
+<article class="novel-card">  <a href={href} class="cover-link">
+    {cover ? (
+      <img src={cover} alt={`${title} cover`} class="cover" loading="lazy" />
+    ) : (
+      <div class="cover-placeholder">
+        <span>BERYLL TL</span>
+        <strong>{title}</strong>
+      </div>
+    )}
+  </a>  <div class="novel-info"><div class="novel-heading">
+  <h3><a href={href}>{title}</a></h3>
+  <span class:list={["status", status.toLowerCase().replace(/\s+/g, "-")]}>{status}</span>
+</div>
+
+{rawTitle && <p class="raw-title">{rawTitle}</p>}
+
+<p class="author">By {author}</p>
+
+<p class="synopsis">{synopsis}</p>
+
+{genres.length > 0 && (
+  <div class="genres">
+    {genres.map((genre) => <span class="genre">{genre}</span>)}
+  </div>
+)}
+
+<div class="novel-meta">
+  <span>📖 {totalChapters} Chapters</span>
+  {novelUpdates && (
+    <a href={novelUpdates} target="_blank" rel="noopener noreferrer">
+      Novel Updates ↗
+    </a>
+  )}
+</div>
+
+<a href={readingHref} class="read-button">{readingLabel}</a>
+
+  </div>
+</article><style>
+  .novel-card {
+    display: flex;
+    gap: 18px;
+    padding: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: border-color 0.2s ease;
+  }
+
+  .novel-card:hover {
+    border-color: var(--accent);
+  }
+
+  .cover-link {
+    flex: 0 0 115px;
+  }
+
+  .cover {
+    width: 115px;
+    height: 165px;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+
+  .cover-placeholder {
+    width: 115px;
+    height: 165px;
+    padding: 10px;
+    background: linear-gradient(145deg, #3a291b, #171717);
+    border: 1px solid #55402b;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .cover-placeholder span {
+    color: var(--accent);
+    font-size: 10px;
+    font-weight: bold;
+  }
+
+  .cover-placeholder strong {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .novel-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .novel-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  h3 {
+    font-size: 18px;
+    line-height: 1.4;
+  }
+
+  h3 a:hover {
+    color: var(--accent);
+  }
+
+  .raw-title {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 3px;
+  }
+
+  .status {
+    flex-shrink: 0;
+    padding: 3px 8px;
+    border-radius: 3px;
+    background: #293c2d;
+    color: #9cdda5;
+    font-size: 10px;
+  }
+
+  .completed {
+    background: #293747;
+    color: #a8c9f0;
+  }
+
+  .hiatus {
+    background: #45351f;
+    color: #f1c27d;
+  }
+
+  .author {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 5px;
+  }
+
+  .synopsis {
+    color: #ccc;
+    font-size: 13px;
+    margin: 12px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .genres {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 13px;
+  }
+
+  .genre {
+    padding: 3px 8px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--muted);
+    font-size: 10px;
+  }
+
+  .novel-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 14px;
+  }
+
+  .novel-meta a {
+    color: var(--accent);
+  }
+
+  .novel-meta a:hover {
+    text-decoration: underline;
+  }
+
+  .read-button {
+    display: inline-block;
+    padding: 8px 14px;
+    background: var(--accent);
+    color: #151515;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .read-button:hover {
+    background: #ffb45e;
+  }
+
+  @media (max-width: 420px) {
+    .novel-card {
+      gap: 12px;
+      padding: 12px;
+    }
+
+    .cover-link {
+      flex-basis: 90px;
+    }
+
+    .cover,
+    .cover-placeholder {
+      width: 90px;
+      height: 135px;
+    }
+
+    h3 {
+      font-size: 15px;
+    }
+
+    .novel-heading {
+      flex-wrap: wrap;
+    }
+  }
+  </style>
