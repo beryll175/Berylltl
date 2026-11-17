@@ -59,13 +59,12 @@ const {
 } = Astro.props;
 const { Content } = await render(entry);
 
-const chapterListHref = "/novels/${novel.slug}/#chapter-list";
+const chapterListHref = `/novels/${novel.slug}/#chapter-list`;
 ---
 <MainLayout
-title={"${entry.data.title} | ${novel.title}"}
-description={"Read ${entry.data.title} of ${novel.title}."}
-
-«»
+  title={`${entry.data.title} | ${novel.title}`}
+  description={`Read ${entry.data.title} of ${novel.title}.`}
+>
 
   <article class="reader"><div class="breadcrumb">
   <a href="/">Home</a>
@@ -92,10 +91,12 @@ description={"Read ${entry.data.title} of ${novel.title}."}
 nextTitle={nextTitle}
 />
 
-<ReaderControls />
+<div class="reading-area">
+  <ReaderControls />
 
-<div class="chapter-content">
-  <Content />
+  <div class="chapter-content">
+    <Content />
+  </div>
 </div>
 
 <ChapterNavigation
