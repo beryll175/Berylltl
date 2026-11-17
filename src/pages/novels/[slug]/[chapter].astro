@@ -49,7 +49,14 @@ return {
 }).filter(Boolean);
 }
 
-const { novel, entry, previousHref, nextHref } = Astro.props;
+const {
+  novel,
+  entry,
+  previousHref,
+  previousTitle,
+  nextHref,
+  nextTitle
+} = Astro.props;
 const { Content } = await render(entry);
 
 const chapterListHref = "/novels/${novel.slug}/#chapter-list";
