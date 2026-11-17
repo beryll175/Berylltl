@@ -66,6 +66,7 @@ const tableId = `chapter-table-${Math.random().toString(36).slice(2, 9)}`;
     section.dataset.initialized = "true";
 
     const rows = Array.from(section.querySelectorAll(".chapter-row"));
+    if (rows.length === 0) return;
     const previous = section.querySelector(".previous");
     const next = section.querySelector(".next");
     const pageNumbers = section.querySelector(".page-numbers");
