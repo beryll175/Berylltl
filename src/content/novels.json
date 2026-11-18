@@ -1,0 +1,18 @@
+{
+  "novels": [
+    {
+      "slug": "coming-soon",
+      "title": "Coming Soon",
+      "rawTitle": "",
+      "author": "Translation in progress",
+      "cover": "",
+      "synopsis": "Our first translated novel will be arriving soon.",
+      "genres": [],
+      "status": "Coming Soon",
+      "totalChapters": 0,
+      "novelUpdates": "",
+      "patreon": "",
+      "chapters": []
+    }
+  ]
+}

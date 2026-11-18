@@ -1,0 +1,215 @@
+---
+import { novels } from "../../../../../../content/novels.js";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("chapters");
+
+  return novels.map((novel) => {
+    const chapters = entries.filter(
+      (entry) => entry.data.novel === novel.slug
+    );
+
+    const nextNumber = chapters.length
+      ? Math.max(...chapters.map((entry) => entry.data.number)) + 1
+      : 1;
+
+    return {
+      params: { slug: novel.slug },
+      props: { novel, nextNumber }
+    };
+  });
+}
+
+const { novel, nextNumber } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Chapter | {novel.title} | Beryll TL Studio</title>
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+  <link rel="stylesheet" href="/studio/studio.css">
+</head>
+
+<body>
+  <div class="app">
+
+    <aside class="sidebar">
+      <div class="logo">BERYLL <span>TL</span></div>
+      <div class="subtitle">Translation Studio</div>
+
+      <div class="nav-label">Workspace</div>
+      <a class="nav-item" href="/studio/index.html">Dashboard</a>
+      <a class="nav-item active" href="/studio/novels/">Novels</a>
+
+      <div class="nav-label">Other</div>
+      <button class="nav-item">Settings</button>
+    </aside>
+
+    <main class="main">
+
+      <header class="topbar">
+        <div>
+          <p style="color: var(--muted); font-size: 13px;">
+            <a href="/studio/novels/" style="color: var(--muted);">
+              Novels
+            </a>
+            /
+            <a
+              href={`/studio/novel/${novel.slug}/`}
+              style="color: var(--muted);"
+            >
+              {novel.title}
+            </a>
+            /
+            <a
+              href={`/studio/novel/${novel.slug}/chapters/`}
+              style="color: var(--muted);"
+            >
+              Chapters
+            </a>
+            / Add Chapter
+          </p>
+
+          <h1>Add Chapter</h1>
+          <div class="status">{novel.title}</div>
+        </div>
+      </header>
+
+      <section class="form-container">
+
+        <h2>New Chapter</h2>
+
+        <p class="form-description">
+          Add a new chapter to {novel.title}.
+        </p>
+
+        <form id="newChapterForm">
+
+          <div class="form-section">
+            <h3>Chapter Information</h3>
+
+            <div class="form-grid">
+
+              <div class="form-field">
+                <label>Chapter Number *</label>
+                <input
+                  type="number"
+                  name="number"
+                  min="1"
+                  value={nextNumber}
+                  required
+                >
+              </div>
+
+              <div class="form-field">
+                <label>Chapter Title *</label>
+                <input
+                  type="text"
+                  name="title"
+                  placeholder="Enter chapter title"
+                  required
+                >
+              </div>
+
+              <div class="form-field">
+                <label>Volume</label>
+                <input
+                  type="text"
+                  name="volume"
+                  value="Volume 1"
+                  placeholder="Volume 1"
+                >
+              </div>
+
+              <div class="form-field">
+                <label>Last Updated</label>
+                <input
+                  type="date"
+                  name="updated"
+                  value={new Date().toISOString().slice(0, 10)}
+                >
+              </div>
+
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Chapter Content</h3>
+
+            <div class="form-field full">
+  <label>Chapter Text *</label>
+
+  <div id="editor" class="studio-quill-editor"></div>
+  <input type="hidden" name="content" id="chapterContent">
+
+  <div style="display: flex; justify-content: space-between; margin-top: 10px; color: var(--muted); font-size: 13px;">
+    <span id="wordCount">0 words</span>
+    <span id="characterCount">0 characters</span>
+  </div>
+            </div>
+
+          </div>
+
+          <div class="form-actions">
+
+            <a
+              href={`/studio/novel/${novel.slug}/chapters/`}
+              class="secondary-btn"
+              style="text-decoration: none; text-align: center;"
+            >
+              Cancel
+            </a>
+
+            <button type="button" class="primary-btn" disabled>
+              Save Draft
+            </button>
+
+          </div>
+
+        </form>
+
+      </section>
+
+    </main>
+  </div>
+  <script is:inline src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
+<script is:inline>
+  const quill = new Quill("#editor", {
+    theme: "snow",
+    placeholder: "Write or paste your translated chapter here...",
+    modules: {
+      toolbar: [
+        [{ header: [1, 2, 3, false] }],
+        ["bold", "italic", "underline", "strike"],
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ align: [] }],
+        ["blockquote"],
+        ["link"],
+        ["clean"]
+      ]
+    }
+  });
+
+  const wordCount = document.getElementById("wordCount");
+  const characterCount = document.getElementById("characterCount");
+  const chapterContent = document.getElementById("chapterContent");
+
+  quill.on("text-change", function () {
+    const text = quill.getText().trim();
+
+    const words = text ? text.split(/\s+/).length : 0;
+    const characters = text.length;
+
+    wordCount.textContent = words + " words";
+    characterCount.textContent = characters + " characters";
+
+    chapterContent.value = quill.root.innerHTML;
+  });
+        </script>
+</body>
+  </html>

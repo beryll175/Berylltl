@@ -1,0 +1,171 @@
+---
+import { novels } from "../../../content/novels.js";
+
+export function getStaticPaths() {
+  return novels.map((novel) => ({
+    params: { slug: novel.slug },
+    props: { novel }
+  }));
+}
+
+const { novel } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{novel.title} | Beryll TL Studio</title>
+  <link rel="stylesheet" href="/studio/studio.css">
+</head>
+
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">BERYLL <span>TL</span></div>
+      <div class="subtitle">Translation Studio</div>
+
+      <div class="nav-label">Workspace</div>
+      <a class="nav-item" href="/studio/index.html">Dashboard</a>
+      <a class="nav-item active" href="/studio/novels/">Novels</a>
+
+      <div class="nav-label">Other</div>
+      <button class="nav-item">Settings</button>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p style="color: var(--muted); font-size: 13px;">
+            <a href="/studio/novels/" style="color: var(--muted);">
+              Studio / Novels
+            </a>
+            / {novel.title}
+          </p>
+          <h1>{novel.title}</h1>
+          <div class="status">Novel Management</div>
+        </div>
+      </header>
+
+      <section class="welcome">
+        <h2>Novel Overview</h2>
+        <p>Manage this novel's information and chapters.</p>
+      </section>
+
+      <section class="novel-overview">
+        <div class="cover">
+          {novel.cover ? (
+            <img src={novel.cover} alt={novel.title} />
+          ) : (
+            <span>No Cover</span>
+          )}
+        </div>
+
+        <div class="details">
+          <h2>{novel.title}</h2>
+          <p>{novel.rawTitle}</p>
+          <p>Author: {novel.author}</p>
+          <p>Status: {novel.status}</p>
+          <p>Total Chapters: {novel.totalChapters}</p>
+          <p>Genres: {novel.genres?.join(", ") || "None added"}</p>
+        </div>
+      </section>
+
+      <section class="management-section">
+        <h2>Manage Novel</h2>
+        <p>Edit the novel's information or manage its chapters.</p>
+
+        <div class="management-actions">
+          <a href={`/studio/novel/${novel.slug}/edit/`} class="primary-btn">
+  Edit Novel Information
+          </a>
+          <a href={`/studio/novel/${novel.slug}/chapters/`} class="primary-btn">
+  Manage Chapters
+</a>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+
+<style>
+  .novel-overview {
+    display: flex;
+    gap: 25px;
+    padding: 25px;
+    margin-top: 25px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .cover {
+    width: 130px;
+    min-width: 130px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-light);
+    color: var(--muted);
+    font-size: 13px;
+    overflow: hidden;
+    border-radius: 7px;
+  }
+
+  .cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .details h2 {
+    margin-top: 0;
+  }
+
+  .details p {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 10px 0;
+  }
+
+  .management-section {
+    margin-top: 30px;
+    padding: 25px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .management-section p {
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .management-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .primary-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 500px) {
+    .novel-overview {
+      gap: 15px;
+      padding: 15px;
+    }
+
+    .cover {
+      width: 90px;
+      min-width: 90px;
+      height: 130px;
+    }
+  }
+</style>
+  </html>

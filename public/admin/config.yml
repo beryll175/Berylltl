@@ -1,0 +1,127 @@
+local_backend: true
+
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "novels"
+    label: "Novels"
+    files:
+      - name: "novel-library"
+        label: "Novel Library"
+        file: "src/content/novels.json"
+        fields:
+          - name: "novels"
+            label: "Novels"
+            widget: "list"
+            summary: "{{fields.title}}"
+            fields:
+              - name: "slug"
+                label: "URL Slug"
+                widget: "string"
+
+              - name: "title"
+                label: "English Title"
+                widget: "string"
+
+              - name: "rawTitle"
+                label: "Chinese Title"
+                widget: "string"
+                required: false
+
+              - name: "author"
+                label: "Author"
+                widget: "string"
+
+              - name: "cover"
+                label: "Cover Image"
+                widget: "image"
+                required: false
+
+              - name: "synopsis"
+                label: "Synopsis"
+                widget: "text"
+
+              - name: "genres"
+                label: "Genres"
+                widget: "list"
+
+              - name: "status"
+                label: "Translation Status"
+                widget: "select"
+                options:
+                  - "Ongoing"
+                  - "Completed"
+                  - "Hiatus"
+                  - "Coming Soon"
+
+              - name: "totalChapters"
+                label: "Total Chapters"
+                widget: "number"
+                default: 0
+
+              - name: "novelUpdates"
+                label: "Novel Updates Link"
+                widget: "string"
+                required: false
+
+              - name: "patreon"
+                label: "Patreon Link"
+                widget: "string"
+                required: false
+
+              - name: "chapters"
+                label: "Chapter References"
+                widget: "hidden"
+                default: []
+
+  - name: "chapters"
+    label: "Chapters"
+    label_singular: "Chapter"
+    folder: "src/content/chapters"
+    create: true
+    extension: "md"
+    format: "frontmatter"
+    slug: "{{number}}"
+
+    nested:
+      depth: 1
+      subfolders: false
+
+    meta:
+      path:
+        widget: "string"
+        label: "Novel Folder"
+
+    fields:
+      - name: "title"
+        label: "Chapter Title"
+        widget: "string"
+
+      - name: "number"
+        label: "Chapter Number"
+        widget: "number"
+
+      - name: "novel"
+        label: "Novel Slug"
+        widget: "string"
+
+      - name: "updated"
+        label: "Last Updated"
+        widget: "datetime"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+        required: false
+
+      - name: "volume"
+        label: "Volume"
+        widget: "string"
+        required: false
+
+      - name: "body"
+        label: "Chapter Content"
+        widget: "markdown"

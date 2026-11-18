@@ -1,0 +1,175 @@
+---
+import { novels } from "../../content/novels.js";
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novels | Beryll TL Studio</title>
+  <link rel="stylesheet" href="/studio/studio.css">
+</head>
+
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">BERYLL <span>TL</span></div>
+      <div class="subtitle">Translation Studio</div>
+
+      <div class="nav-label">Workspace</div>
+      <a class="nav-item" href="/studio/index.html">Dashboard</a>
+      <a class="nav-item active" href="/studio/novels/">Novels</a>
+
+      <div class="nav-label">Other</div>
+      <button class="nav-item">Settings</button>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <h1>Novels</h1>
+          <div class="status">Novel Library</div>
+        </div>
+
+        <a class="primary-btn" href="/studio/novel/new/">
+  + Add Novel
+        </a>
+      </header>
+
+      <section class="welcome">
+        <h2>Your Novel Library</h2>
+        <p>Manage your translations, update novel information, and organise chapters.</p>
+      </section>
+
+      {novels.length === 0 ? (
+        <section class="empty-state">
+          <h2>No Novels Yet</h2>
+          <p>Your novel collection will appear here.</p>
+          <a class="primary-btn" href="/studio/novel/new/">
+  + Add Your First Novel
+</a>
+        </section>
+      ) : (
+        <section class="novel-list">
+          {novels.map((novel) => (
+            <a class="novel-card-link" href={`/studio/novel/${novel.slug}/`}>
+						<article class="novel-item">
+              <div class="novel-cover">
+                {novel.cover ? (
+                  <img src={novel.cover} alt={novel.title} />
+                ) : (
+                  <span>No Cover</span>
+                )}
+              </div>
+
+              <div class="novel-info">
+                <h2>{novel.title}</h2>
+                <p>{novel.rawTitle}</p>
+                <p>Author: {novel.author}</p>
+
+                <div class="novel-details">
+                  <span>{novel.status}</span>
+                  <span>{novel.totalChapters} Chapters</span>
+                </div>
+
+                <div class="novel-genres">
+                  {novel.genres?.join(" · ")}
+                </div>
+              </div>
+            </article>
+      			</a>
+          ))}
+        </section>
+      )}
+    </main>
+  </div>
+</body>
+
+<style>
+
+  .novel-card-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.novel-card-link:hover .novel-item {
+  border-color: var(--accent);
+  transition: border-color 0.2s ease;
+}
+  .novel-list {
+    display: grid;
+    gap: 18px;
+    margin-top: 25px;
+  }
+
+  .novel-item {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .novel-cover {
+    width: 100px;
+    min-width: 100px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-light);
+    color: var(--muted);
+    font-size: 12px;
+    overflow: hidden;
+    border-radius: 6px;
+  }
+
+  .novel-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .novel-info h2 {
+    margin: 0 0 8px;
+    font-size: 19px;
+  }
+
+  .novel-info p {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 5px 0;
+  }
+
+  .novel-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--accent);
+  }
+
+  .novel-genres {
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  @media (max-width: 500px) {
+    .novel-item {
+      gap: 12px;
+      padding: 12px;
+    }
+
+    .novel-cover {
+      width: 75px;
+      min-width: 75px;
+      height: 110px;
+    }
+  }
+</style>
+</html>
